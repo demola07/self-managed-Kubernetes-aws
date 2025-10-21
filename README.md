@@ -14,16 +14,16 @@ Production-ready infrastructure for deploying a self-managed Kubernetes cluster 
 
 ## 📋 Table of Contents
 
-- [Architecture](#architecture)
-- [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
-- [Infrastructure Components](#infrastructure-components)
-- [Configuration](#configuration)
+- [Architecture](#️-architecture)
+- [Prerequisites](#-prerequisites)
+- [Quick Start](#-quick-start)
+- [Infrastructure Components](#-infrastructure-components)
+- [Configuration](#️-configuration)
 - [Kubernetes Setup](#kubernetes-setup)
-- [Security](#security)
-- [Monitoring & Operations](#monitoring--operations)
-- [Troubleshooting](#troubleshooting)
-- [Cost Optimization](#cost-optimization)
+- [Security](#-security)
+- [Monitoring & Operations](#-monitoring--operations)
+- [Troubleshooting](#-troubleshooting)
+- [Cost Optimization](#-cost-optimization)
 
 ## 🏗️ Architecture
 
