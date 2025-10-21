@@ -23,7 +23,6 @@ Production-ready infrastructure for deploying a self-managed Kubernetes cluster 
 - [Security](#-security)
 - [Monitoring & Operations](#-monitoring--operations)
 - [Troubleshooting](#-troubleshooting)
-- [Cost Optimization](#-cost-optimization)
 
 ## 🏗️ Architecture
 
@@ -380,29 +379,6 @@ kubectl logs -n kube-system <pod>
 # Debug networking
 kubectl run -it --rm debug --image=busybox --restart=Never -- sh
 ```
-
-## 💰 Cost Optimization
-
-### Estimated Monthly Costs (us-east-1)
-
-| Resource | Quantity | Cost/Month |
-|----------|----------|------------|
-| t3.medium control plane | 2 | ~$60 |
-| t3.medium workers | 2 | ~$60 |
-| t3.micro bastion | 1 | ~$7 |
-| NAT Gateways | 2 | ~$65 |
-| Network Load Balancer | 1 | ~$20 |
-| EBS volumes (200GB) | - | ~$20 |
-| **Total** | - | **~$232/month** |
-
-### Cost Reduction Strategies
-
-1. **Right-size instances**: Monitor utilization and adjust
-2. **Single NAT Gateway**: Use one NAT (not HA) for dev/test
-3. **Reserved Instances**: Purchase for stable workloads
-4. **Spot Instances**: Use for non-critical workers
-5. **Stop when not in use**: Shut down dev/test clusters
-6. **Cluster Autoscaler**: Scale workers based on demand
 
 ## 📚 Additional Resources
 
