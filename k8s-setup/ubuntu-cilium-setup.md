@@ -128,7 +128,7 @@ EOF
 
 ## 3. Install kubeadm, kubelet, kubectl
 
-Pin versions in production. Example below uses 1.33.x — replace with your vetted version.
+Pin versions in production. Example below uses 1.33.x (latest) — replace with your vetted version.
 
 ### 3.1 Add Kubernetes Repository & Install
 
@@ -137,10 +137,22 @@ sudo mkdir -p -m 755 /etc/apt/keyrings
 sudo curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 sudo apt-get update
-KUBE_VERSION="1.33.2-1.1"
+
+# Check available versions
+apt-cache madison kubeadm | grep 1.33
+
+# Install specific version (use latest from above)
+KUBE_VERSION="1.33.5-1.1"
 sudo apt-get install -y kubelet=$KUBE_VERSION kubeadm=$KUBE_VERSION kubectl=$KUBE_VERSION
 sudo apt-mark hold kubelet kubeadm kubectl
+
+# Verify installation
+kubeadm version
+kubectl version --client
+kubelet --version
 ```
+
+> **Note**: To use a different version (e.g., 1.31), change both the repository URL (`v1.33` → `v1.31`) and `KUBE_VERSION` variable.
 
 ---
 
