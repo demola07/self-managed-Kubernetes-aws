@@ -113,3 +113,35 @@ variable "allowed_ssh_cidrs" {
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }
+
+# Gateway API / Load Balancer Configuration
+variable "gateway_http_nodeport" {
+  description = "NodePort for Gateway API HTTP traffic (must match Cilium Gateway service)"
+  type        = number
+  default     = 30080
+}
+
+variable "gateway_https_nodeport" {
+  description = "NodePort for Gateway API HTTPS traffic (must match Cilium Gateway service)"
+  type        = number
+  default     = 30443
+}
+
+# ArgoCD NLB Configuration
+variable "enable_argocd_nlb" {
+  description = "Enable ArgoCD access via NLB"
+  type        = bool
+  default     = false
+}
+
+variable "argocd_nodeport" {
+  description = "Kubernetes NodePort for ArgoCD service"
+  type        = number
+  default     = 30100
+}
+
+variable "argocd_listener_port" {
+  description = "External port on NLB for ArgoCD access"
+  type        = number
+  default     = 8080
+}

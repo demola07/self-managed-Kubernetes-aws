@@ -26,3 +26,14 @@ worker_root_volume_size   = 50
 # SSH Configuration
 key_name          = "your-key-pair-name"
 allowed_ssh_cidrs = ["0.0.0.0/0"]  # Restrict this in production
+
+# Gateway API / Load Balancer Configuration
+# These must match the NodePorts used by your Cilium Gateway service
+gateway_http_nodeport  = 32540  # HTTP NodePort (check: kubectl get svc -n <namespace>)
+gateway_https_nodeport = 31608  # HTTPS NodePort (check: kubectl get svc -n <namespace>)
+
+# ArgoCD NLB Configuration (Optional)
+# Set enable_argocd_nlb = true to expose ArgoCD via NLB
+enable_argocd_nlb      = false  # Set to true to enable
+argocd_nodeport        = 30080  # Kubernetes NodePort for ArgoCD
+argocd_listener_port   = 8080   # External port on NLB (access via http://<nlb-dns>:8080)

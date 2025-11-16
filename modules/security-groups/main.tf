@@ -101,6 +101,17 @@ resource "aws_vpc_security_group_ingress_rule" "control_plane_controller_manager
   cidr_ipv4   = var.vpc_cidr
 }
 
+# Cilium VXLAN (8472 UDP) for CNI overlay network
+resource "aws_vpc_security_group_ingress_rule" "control_plane_cilium_vxlan" {
+  security_group_id = aws_security_group.control_plane.id
+  description       = "Cilium VXLAN overlay network"
+  
+  from_port   = 8472
+  to_port     = 8472
+  ip_protocol = "udp"
+  cidr_ipv4   = var.vpc_cidr
+}
+
 # SSH from bastion
 resource "aws_vpc_security_group_ingress_rule" "control_plane_ssh" {
   security_group_id            = aws_security_group.control_plane.id
@@ -209,14 +220,47 @@ resource "aws_vpc_security_group_ingress_rule" "worker_kubelet" {
   referenced_security_group_id = aws_security_group.control_plane.id
 }
 
-# NodePort Services (30000-32767)
+# NodePort Services (30000-32767) from VPC
 resource "aws_vpc_security_group_ingress_rule" "worker_nodeport" {
   security_group_id = aws_security_group.worker.id
-  description       = "NodePort Services"
+  description       = "NodePort Services from VPC"
   
   from_port   = 30000
   to_port     = 32767
   ip_protocol = "tcp"
+  cidr_ipv4   = var.vpc_cidr
+}
+
+# HTTP NodePort for Gateway API from internet
+resource "aws_vpc_security_group_ingress_rule" "worker_http_nodeport" {
+  security_group_id = aws_security_group.worker.id
+  description       = "HTTP NodePort for Gateway API (from NLB)"
+  
+  from_port   = var.gateway_http_nodeport
+  to_port     = var.gateway_http_nodeport
+  ip_protocol = "tcp"
+  cidr_ipv4   = "0.0.0.0/0"
+}
+
+# HTTPS NodePort for Gateway API from internet
+resource "aws_vpc_security_group_ingress_rule" "worker_https_nodeport" {
+  security_group_id = aws_security_group.worker.id
+  description       = "HTTPS NodePort for Gateway API (from NLB)"
+  
+  from_port   = var.gateway_https_nodeport
+  to_port     = var.gateway_https_nodeport
+  ip_protocol = "tcp"
+  cidr_ipv4   = "0.0.0.0/0"
+}
+
+# Cilium VXLAN (8472 UDP) for CNI overlay network
+resource "aws_vpc_security_group_ingress_rule" "worker_cilium_vxlan" {
+  security_group_id = aws_security_group.worker.id
+  description       = "Cilium VXLAN overlay network"
+  
+  from_port   = 8472
+  to_port     = 8472
+  ip_protocol = "udp"
   cidr_ipv4   = var.vpc_cidr
 }
 

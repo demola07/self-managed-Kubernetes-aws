@@ -43,6 +43,10 @@ module "security_groups" {
   vpc_cidr     = var.vpc_cidr
 
   allowed_ssh_cidrs = var.allowed_ssh_cidrs
+  
+  # Gateway API NodePorts (must match app_loadbalancer module)
+  gateway_http_nodeport  = var.gateway_http_nodeport
+  gateway_https_nodeport = var.gateway_https_nodeport
 }
 
 # IAM Module
@@ -105,4 +109,34 @@ module "worker_nodes" {
   key_name             = var.key_name
   iam_instance_profile = module.iam.worker_instance_profile_name
   root_volume_size     = var.worker_root_volume_size
+}
+
+module "app_loadbalancer" {
+  source = "./modules/app-loadbalancer"
+
+  project_name        = var.project_name
+  environment         = var.environment
+  vpc_id              = module.vpc.vpc_id
+  public_subnet_ids   = module.vpc.public_subnet_ids
+  worker_instance_ids = module.worker_nodes.instance_ids
+
+  http_nodeport  = var.gateway_http_nodeport
+  https_nodeport = var.gateway_https_nodeport
+}
+
+# ArgoCD NLB Service (optional)
+module "argocd_nlb" {
+  count  = var.enable_argocd_nlb ? 1 : 0
+  source = "./modules/nlb-service"
+
+  project_name               = var.project_name
+  environment                = var.environment
+  service_name               = "argocd"
+  vpc_id                     = module.vpc.vpc_id
+  load_balancer_arn          = module.app_loadbalancer.load_balancer_arn
+  worker_instance_ids        = module.worker_nodes.instance_ids
+  worker_security_group_id   = module.security_groups.worker_sg_id
+
+  nodeport      = var.argocd_nodeport
+  listener_port = var.argocd_listener_port
 }

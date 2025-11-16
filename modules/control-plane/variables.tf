@@ -32,7 +32,7 @@ variable "node_count" {
 variable "instance_type" {
   description = "Instance type for control plane nodes"
   type        = string
-  default     = "t3.medium"
+  default     = "t4g.medium"
 }
 
 variable "key_name" {
